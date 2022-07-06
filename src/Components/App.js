@@ -6,12 +6,16 @@ import Home from '../Components/Home.js';
 import Login from '../Components/Login.js';
 import SignUp from '../Components/Signup.js';
 
+import UserContext from "../Context/userContext.js";
 
 export default function App(){
 
+    const [token,setToken] = useState(null);
+    const [username,setUsername] = useState(null);
 
     return(
-        <>
+
+        <UserContext.Provider value={{token,setToken,username,setUsername}}>
             <GlobalStyle />
             <BrowserRouter>
                 <Routes>
@@ -20,6 +24,6 @@ export default function App(){
                     <Route path="/cadastro" element={<SignUp />} />
                 </Routes>
             </BrowserRouter>         
-        </>
+        </UserContext.Provider>
     )
 }
