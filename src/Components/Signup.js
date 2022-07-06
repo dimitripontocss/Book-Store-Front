@@ -21,7 +21,7 @@ export default function SignUp(){
             passwordConfirmation: senha2
         }
         const promise = axios.post(
-            "http://localhost:5001/sign-up",
+            process.env.REACT_APP_LINK_BACKEND+"/sign-up",
             body
           );
           promise.then((a)=> {alert(a.data);navigate("/login")})

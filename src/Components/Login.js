@@ -20,7 +20,7 @@ export default function Login(){
             password: senha
         }
         const promise = axios.post(
-            "http://localhost:5001/login",
+            process.env.REACT_APP_LINK_BACKEND+"/login",
             body
           );
           promise.then((response)=> 
