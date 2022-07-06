@@ -8,17 +8,21 @@ export default function Home(){
 
     return(
             <Content>
-                <h1>BookStore</h1>
-                <Input placeholder="Pesquisar"></Input>          
-                
-                <Link to="/login">Auth</Link>
-                <Link to="">Cart</Link>
+                <Header>
+                    <h1>BookStore</h1>
+                    <Input placeholder="Pesquisar"></Input>          
+                    
+                    <Link to="/login">Auth</Link>
+                    <Link to="">Cart</Link>
+                </Header>
             </Content>
     )
 }
 
-
 const Content = styled.div`
+`
+
+const Header = styled.div`
     width: 100%;
     background-color: #BABD8D;
     height: 60px;
