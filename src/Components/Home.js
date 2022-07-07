@@ -57,10 +57,11 @@ function MenuUser({menu,setMenu}){
 
 const PopUp = styled.div`
 position: fixed;
-right: 2.2%;
+right: 6%;
 top: 60px;
 
-width: 165px;
+min-width: 120px;
+width: 11%;
 height: fit-content;
 
 border-radius: 7px;
