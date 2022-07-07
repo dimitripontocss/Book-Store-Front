@@ -5,6 +5,7 @@ import GlobalStyle from '../Components/GlobalStyle.js';
 import Home from '../Components/Home.js';
 import Login from '../Components/Login.js';
 import SignUp from '../Components/Signup.js';
+import Cart from './Cart.js';
 
 import UserContext from "../Context/userContext.js";
 
@@ -22,6 +23,7 @@ export default function App(){
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/cadastro" element={<SignUp />} />
+                    <Route path="/carrinho" element={<Cart />} />
                 </Routes>
             </BrowserRouter>         
         </UserContext.Provider>
