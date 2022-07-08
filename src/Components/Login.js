@@ -12,7 +12,7 @@ export default function Login(){
     const{ setToken,setUsername } = useContext(UserContext);
     const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
-    const [error, setError] = useState("");
+    const [error, setError] = useState(undefined);
 
     function login(event){
         event.preventDefault();
@@ -44,7 +44,7 @@ export default function Login(){
                     <Input placeholder="E-mail"  type="email" required value={email} onChange={e => setEmail(e.target.value)}></Input>
                     <Input placeholder="Senha" type="password" required value={senha} onChange={e => setSenha(e.target.value)}></Input>
                     {
-                        error.length === 0 ? <></> : <p>{error}</p>
+                        error ? <p>{error}</p> : <></>
                     }
                     <Button>Entrar</Button>
                 </form>
