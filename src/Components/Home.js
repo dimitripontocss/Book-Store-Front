@@ -1,10 +1,24 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 export default function Home(){
-
-
     
+    const [products, setproducts] = useState([]);
+
+    useEffect(() => getProducts(), [])
+
+    async function getProducts(){
+        try {
+            const response = await axios.get("http://localhost:5000/home");
+            setproducts(response.data);        
+            console.log(response.data)
+        } catch (error) {
+          alert(`Erro ao buscar produtos: ${error.message}`);
+            
+        }  
+    }    
 
     return(
             <Content>
@@ -15,11 +29,24 @@ export default function Home(){
                     <Link to="/login">Auth</Link>
                     <Link to="">Cart</Link>
                 </Header>
+                <Container>
+    
+                    {products.map(product => (
+                    <Box>
+                        <img src={product.imageUrl} />
+                        <p>{product.name}</p>
+                        <p>{product.price}</p>
+                    </Box>))}
+                    
+                </Container>
             </Content>
     )
 }
 
 const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 `
 
 const Header = styled.div`
@@ -35,9 +62,7 @@ const Header = styled.div`
         font-family:'Josefin Sans', sans-serif;
         font-size: 24px;
         color: #FFFFFF;
-        text-shadow: 1px 1px 2px #7C6A0A;
-
-        
+        text-shadow: 1px 1px 2px #7C6A0A;       
         
     }
 `
@@ -52,4 +77,31 @@ const Input = styled.input`
     
 `
 
+const Container = styled.div`
+    width: 90%;
+    height: 100vh;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 
+img{
+    width: 120px;
+    height: 140px;
+    margin-top: 14px;
+    margin-bottom: 18px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+}
+`
+const Box = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    height: 270px;
+    background-color: #FA9500;
+    border-radius: 5px;
+    margin-top: 18px;
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    
+`
