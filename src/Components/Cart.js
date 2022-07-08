@@ -13,18 +13,27 @@ export default function Cart(){
     const [menu,setMenu] = useState(false);
     const [products, setProducts] = useState([]);
     const [total,setTotal] = useState(0);
-    try{
-        useEffect(() => {
-            const promise = axios.get(process.env.REACT_APP_LINK_BACKEND+"/cart", {
+    const [refresh,setRefresh] = useState(0);
+
+    function deleteProduct(id){
+        if(window.confirm("Vai tirar esse livro do carrinho?")){
+            const promise = axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            promise.then((response) => {setProducts(response.data.products);setTotal(response.data.total)} );
-        }, [])
-    }catch(error){
-        console.log(error);
-    }    
+            setRefresh(refresh+1);
+        }
+    }
+
+    useEffect(() => {
+        const promise = axios.get(process.env.REACT_APP_LINK_BACKEND+"/cart", {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        promise.then((response) => {setProducts(response.data.products);setTotal(response.data.totalFixed)} );
+    }, [refresh])   
     return(
         <Container>
             <Header>
@@ -46,11 +55,28 @@ export default function Cart(){
                                     <Link to="/"><p style={{color:"#7c6a0a",marginTop:175}}>Voltar para a home!</p></Link>
                                 </div>
                                 :
-                                products.map((value,index)=><Product value={value} key={index}/>)
+                                products.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
                         }
                     </Products>
+                    <Checkout>
+                        {
+                            products.length === 0 
+                                ?
+                                <></>
+                                :
+                                <>
+                                    <div style={{display:"flex",justifyContent:"space-between"}}>
+                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>Seu Total:</p>
+                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>R$ {total}</p>
+                                    </div>
+                                    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+                                        <Link to="/finalizar"><p style={{fontSize:18, color:"#7c6a0a", fontWeight:700}}>Fazer Checkout</p></Link>
+                                        <Link to="/"><p style={{fontSize:16, color:"#7c6a0a", fontWeight:700}}>Continuar comprando</p></Link>
+                                    </div>
+                                </>
+                        }
+                    </Checkout>
             </Content>
-            
         </Container>
     )
 }
@@ -88,35 +114,50 @@ function MenuUser({menu,setMenu}){
     )
 }
 
-function Product({value}){
+function Product({value,deleteProduct}){
     return(
         <CartProd>
             <img src={value.imageUrl} />
-            <div>
-                <p style={{fontSize:18, color:"black", fontWeight:700}}>{value.name}</p>
+            <div style={{minWidth:150}}>
+                <p style={{fontSize:16, color:"black", fontWeight:700}}>{value.name}</p>
                 <p>{value.price}</p>
+            </div>
+            <div onClick={()=>{deleteProduct(value._id)}}style={{display:"flex",alignItems:"center"}}>
+                <ion-icon style={{fontSize:30}}name="trash-outline"></ion-icon>
             </div>
         </CartProd>
     )
 }
 
+const Checkout = styled.div`
+display: flex;
+flex-direction: column;
+
+width: 45%;
+`
+
 const CartProd = styled.div`
 display: flex;
+justify-content: space-between;
+align-items: center;
 
 margin: 20px 20px;
 border-bottom: 2px solid #7c6a0a;
     img{
-        width: 80px;
-        margin-right: 30%;
+        max-width:80px;
+        max-height:100px;
+        width: auto;
+        height: auto;
     }
 `
 
 const PopUp = styled.div`
 position: fixed;
-right: 1.5%;
+right: 3%;
 top: 60px;
 
-width: 165px;
+min-width: 140px;
+width: 11%;
 height: fit-content;
 
 border-radius: 7px;
@@ -199,13 +240,19 @@ align-items: center;
     }
 `
 const Products = styled.div`
-width: 70%;
-min-height: 70%;
+width: 50%;
+min-height: fit-content;
+max-height: 70%;
 
 margin-top: 30px;
 border: 3px solid #7c6a0a;
 border-radius: 8px;
+
+overflow-y: scroll;
     >p{
         margin-top: 100px;
+    }
+    ::-webkit-scrollbar{
+        width: 0;
     }
 `
