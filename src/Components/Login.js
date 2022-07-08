@@ -28,7 +28,7 @@ export default function Login(){
           {
             setToken(response.data.token);
             setUsername(response.data.name);
-            navigate(-1);
+            navigate("/");
           })
           .catch((e)=>
             {

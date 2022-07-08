@@ -1,22 +1,55 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { useContext,useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { useContext,useEffect,useState } from "react";
 
 import UserContext from "../Context/userContext";
 
 export default function Cart(){
+    const{ token,username } = useContext(UserContext);
+
+    const navigate = useNavigate();
 
     const [menu,setMenu] = useState(false);
-    const{ token,username } = useContext(UserContext);
-    
+    const [products, setProducts] = useState([]);
+    const [total,setTotal] = useState(0);
+    try{
+        useEffect(() => {
+            const promise = axios.get(process.env.REACT_APP_LINK_BACKEND+"/cart", {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            promise.then((response) => {setProducts(response.data.products);setTotal(response.data.total)} );
+        }, [])
+    }catch(error){
+        console.log(error);
+    }    
     return(
         <Container>
             <Header>
-                <ion-icon name="arrow-back-outline"></ion-icon>
+                <div onClick={()=>navigate(-1)}><ion-icon name="arrow-back-outline"></ion-icon></div>
                 <Link to="/"><h1>BookStore</h1></Link>
                 <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
                 <MenuUser menu={menu} setMenu={setMenu}/>
             </Header>
+            <Content>
+                    {
+                        username ? <p>Aqui está seu carrinho, {username}</p> : <p>Faça login para ver seu carrinho!</p>
+                    }
+                    <Products>
+                        {
+                            products.length === 0 
+                                ?
+                                <div style={{textAlign:"center",fontSize:20, color:"#7c6a0a", fontWeight:700,marginTop:100}}>
+                                    <p>Seu carrinho está vazio!</p>
+                                    <Link to="/"><p style={{color:"#7c6a0a",marginTop:175}}>Voltar para a home!</p></Link>
+                                </div>
+                                :
+                                products.map((value,index)=><Product value={value} key={index}/>)
+                        }
+                    </Products>
+            </Content>
             
         </Container>
     )
@@ -54,6 +87,29 @@ function MenuUser({menu,setMenu}){
         </>
     )
 }
+
+function Product({value}){
+    return(
+        <CartProd>
+            <img src={value.imageUrl} />
+            <div>
+                <p style={{fontSize:18, color:"black", fontWeight:700}}>{value.name}</p>
+                <p>{value.price}</p>
+            </div>
+        </CartProd>
+    )
+}
+
+const CartProd = styled.div`
+display: flex;
+
+margin: 20px 20px;
+border-bottom: 2px solid #7c6a0a;
+    img{
+        width: 80px;
+        margin-right: 30%;
+    }
+`
 
 const PopUp = styled.div`
 position: fixed;
@@ -127,4 +183,29 @@ const Header = styled.div`
 const UserArea = styled.div`
 display: flex;
 align-items: center;
+`
+
+const Content = styled.div`
+width: 80%;
+height: 80%;
+
+display: flex;
+flex-direction: column;
+align-items: center;
+    >p{
+        font-size: 20px;
+        color: #7c6a0a;
+        font-weight: 700;
+    }
+`
+const Products = styled.div`
+width: 70%;
+min-height: 70%;
+
+margin-top: 30px;
+border: 3px solid #7c6a0a;
+border-radius: 8px;
+    >p{
+        margin-top: 100px;
+    }
 `

@@ -26,7 +26,7 @@ export default function SignUp(){
             process.env.REACT_APP_LINK_BACKEND+"/sign-up",
             body
           );
-          promise.then((a)=> {alert(a.data);navigate("/login")})
+          promise.then((a)=> {navigate("/login")})
           .catch((e)=>
             {
                 setError(e.response.data);
