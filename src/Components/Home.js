@@ -17,7 +17,7 @@ export default function Home(){
 
     async function getProducts(){
         try {
-            const response = await axios.get("http://localhost:5000/home");
+            const response = await axios.get(process.env.REACT_APP_LINK_BACKEND+"/home");
             setproducts(response.data);        
             console.log(response.data)
         } catch (error) {
