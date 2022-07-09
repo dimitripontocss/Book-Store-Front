@@ -6,18 +6,16 @@ import { useContext,useEffect,useState } from "react";
 import UserContext from "../Context/userContext";
 
 export default function Cart(){
-    const{ token, username } = useContext(UserContext);
+    const{ token,username,products,setProducts,total,setTotal } = useContext(UserContext);
 
     const navigate = useNavigate();
 
     const [menu,setMenu] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [total, setTotal] = useState(0);
-    const [refresh, setRefresh] = useState(0);
+    const [refresh,setRefresh] = useState(0);
 
-    function deleteProduct(id){
-        if(window.confirm("Vai tirar esse livro do carrinho?")){
-            const promise = axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
+    async function deleteProduct(id){
+        if(window.confirm("Vai mesmo tirar esse livro do carrinho?")){
+            await axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -50,9 +48,9 @@ export default function Cart(){
                         {
                             products.length === 0 
                                 ?
-                                <div style={{textAlign:"center",fontSize:20, color:"#7c6a0a", fontWeight:700,marginTop:100}}>
+                                <div style={{textAlign:"center",fontSize:20, color:"#BABD8D", fontWeight:700,marginTop:100}}>
                                     <p>Seu carrinho está vazio!</p>
-                                    <Link to="/"><p style={{color:"#7c6a0a",marginTop:175}}>Voltar para a home!</p></Link>
+                                    <Link to="/"><p style={{color:"#BABD8D",marginTop:175}}>Voltar para a home!</p></Link>
                                 </div>
                                 :
                                 products.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
@@ -66,12 +64,12 @@ export default function Cart(){
                                 :
                                 <>
                                     <div style={{display:"flex",justifyContent:"space-between"}}>
-                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>Seu Total:</p>
-                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>R$ {total}</p>
+                                        <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Seu Total:</p>
+                                        <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>R$ {total}</p>
                                     </div>
                                     <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                                        <Link to="/finalizar"><p style={{fontSize:18, color:"#7c6a0a", fontWeight:700}}>Fazer Checkout</p></Link>
-                                        <Link to="/"><p style={{fontSize:16, color:"#7c6a0a", fontWeight:700}}>Continuar comprando</p></Link>
+                                        <Link to="/finalizar"><p style={{fontSize:18, color:"#BABD8D", fontWeight:700}}>Fazer Checkout</p></Link>
+                                        <Link to="/"><p style={{fontSize:16, color:"#BABD8D", fontWeight:700}}>Continuar comprando</p></Link>
                                     </div>
                                 </>
                         }
@@ -142,7 +140,7 @@ justify-content: space-between;
 align-items: center;
 
 margin: 20px 20px;
-border-bottom: 2px solid #7c6a0a;
+border-bottom: 2px solid #BABD8D;
     img{
         max-width:80px;
         max-height:100px;
@@ -225,7 +223,6 @@ const UserArea = styled.div`
 display: flex;
 align-items: center;
 `
-
 const Content = styled.div`
 width: 80%;
 height: 80%;
@@ -235,7 +232,7 @@ flex-direction: column;
 align-items: center;
     >p{
         font-size: 20px;
-        color: #7c6a0a;
+        color: #BABD8D;
         font-weight: 700;
     }
 `
@@ -245,7 +242,7 @@ min-height: fit-content;
 max-height: 70%;
 
 margin-top: 30px;
-border: 3px solid #7c6a0a;
+border: 3px solid #BABD8D;
 border-radius: 8px;
 
 overflow-y: scroll;

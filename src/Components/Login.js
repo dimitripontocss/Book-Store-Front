@@ -12,6 +12,7 @@ export default function Login(){
     const { setToken,setUsername } = useContext(UserContext);
     const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
+    const [error, setError] = useState(undefined);
 
     function login(event){
         event.preventDefault();
@@ -20,7 +21,7 @@ export default function Login(){
             password: senha
         }
         const promise = axios.post(
-            "http://localhost:5001/login",
+            process.env.REACT_APP_LINK_BACKEND+"/login",
             body
           );
           promise.then((response)=> 
@@ -31,20 +32,23 @@ export default function Login(){
           })
           .catch((e)=>
             {
-                alert(e.response.data);  
+                setError(e.response.data);  
             })
     }
 
     return(
         <Container>
             <Content>
-                <h1>BookStore</h1>
+                <Link to="/"><h1>BookStore</h1></Link>
                 <form onSubmit={login}>
                     <Input placeholder="E-mail"  type="email" required value={email} onChange={e => setEmail(e.target.value)}></Input>
                     <Input placeholder="Senha" type="password" required value={senha} onChange={e => setSenha(e.target.value)}></Input>
+                    {
+                        error ? <p>{error}</p> : <></>
+                    }
                     <Button>Entrar</Button>
                 </form>
-                <Link to="/cadastro">Não tem uma conta? Cadastre-se!</Link>          
+                <Link to="/cadastro"><p style={{color:"#ffffff",fontSize:"14px", fontWeight:700}}>Não tem uma conta? Cadastre-se!</p></Link>          
             </Content>
         </Container>
     )
@@ -80,6 +84,12 @@ const Content = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
+        p{
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+        }
     }
 `
 
@@ -95,7 +105,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 80%;
     height: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     border-radius: 5px;
     border: none;
 `

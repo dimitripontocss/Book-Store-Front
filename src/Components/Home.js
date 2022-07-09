@@ -18,11 +18,12 @@ export default function Home(){
 
     async function getProducts(){
         try {
-            const response = await axios.get("http://localhost:5000/home");
-            setProducts(response.data);        
+            const response = await axios.get(process.env.REACT_APP_LINK_BACKEND+"/home");
+            setproducts(response.data);        
             console.log(response.data)
         } catch (error) {
-          alert(`Erro ao buscar produtos: ${error.message}`);            
+          alert(`Erro ao buscar produtos: ${error.message}`);
+            
         }  
     }    
 
@@ -30,10 +31,9 @@ export default function Home(){
             <Content>
                 <Header>
                     <h1>BookStore</h1>
-                    <Input placeholder="Pesquisar"></Input>          
-                    
-                    <Link to="/login">Auth</Link>
-                    <Link to="">Cart</Link>
+                    <Input placeholder="Pesquisar"></Input>    
+                    <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
+                    <MenuUser menu={menu} setMenu={setMenu}/>                       
                 </Header>
                 <Container>
     
@@ -88,16 +88,13 @@ const PopUp = styled.div`
 position: fixed;
 right: 6%;
 top: 60px;
-font-family:'Roboto', sans-serif;
-font-weight: 500;
-
 
 min-width: 120px;
-width: auto;
+width: 11%;
 height: fit-content;
 
 border-radius: 7px;
-background-color: red;
+background-color: #BABD8D;
 
 display: flex;
 flex-direction: column;
@@ -108,6 +105,29 @@ text-align: center;
     p{
         font-size: 14px;
         color: #ffffff;
+    }
+
+`
+
+const Header = styled.div`
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #BABD8D;
+    height: 60px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 1px 3px 10px 1px rgba(0, 0, 0, 0.2);
+
+    h1{
+        font-family:'Josefin Sans', sans-serif;
+        font-size: 24px;
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px #7C6A0A;       
+        
     }
 
 `

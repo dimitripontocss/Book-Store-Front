@@ -11,6 +11,8 @@ export default function SignUp(){
     const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
 	const [senha2, setSenha2] = useState("");
+    const [error, setError] = useState("");
+    const [status, setStatus] = useState("");
 
     function signUp(event){
         event.preventDefault();
@@ -21,28 +23,35 @@ export default function SignUp(){
             passwordConfirmation: senha2
         }
         const promise = axios.post(
-            "http://localhost:5001/sign-up",
+            process.env.REACT_APP_LINK_BACKEND+"/sign-up",
             body
           );
-          promise.then((a)=> {alert(a.data);navigate("/login")})
+          promise.then((a)=> {navigate("/login")})
           .catch((e)=>
             {
-                alert(e.response.data);  
+                setError(e.response.data);
+                setStatus(e.response.status); 
             })
     }
 
     return(
         <Container>
             <Content>
-                <h1>BookStore</h1>
+                <Link to="/"><h1>BookStore</h1></Link>
                 <form onSubmit={signUp}>
                     <Input placeholder="Nome"  type="text" required value={nome} onChange={e => setNome(e.target.value)}></Input>
                     <Input placeholder="E-mail"  type="email" required value={email} onChange={e => setEmail(e.target.value)}></Input>
+                    {
+                        status === 400 ? <p>{error}</p> :<></>
+                    }
                     <Input placeholder="Senha" type="password" required value={senha} onChange={e => setSenha(e.target.value)}></Input>
                     <Input placeholder="Confirme a senha" type="password" required value={senha2} onChange={e => setSenha2(e.target.value)}></Input>
+                    {
+                        status === 406 ? <p>{error}</p> : status === 422 ? <p>{error}</p> : <></>
+                    }
                     <Button>Cadastrar</Button>
                 </form>
-                <Link to="/login">Já tem uma conta? Entre agora!</Link>          
+                <Link to="/login"><p style={{color:"#ffffff",fontSize:"14px", fontWeight:700}}>Já tem uma conta? Entre agora!</p></Link>          
             </Content>
         </Container>
     )
@@ -78,6 +87,11 @@ const Content = styled.div`
         display: flex;
         flex-direction: column;
         align-items: center;
+        p{
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 14px;
+        }
     }
 `
 
@@ -93,7 +107,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 80%;
     height: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
     border-radius: 5px;
     border: none;
 `
