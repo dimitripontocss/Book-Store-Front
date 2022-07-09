@@ -9,9 +9,9 @@ import ProductContext from "../Context/productContext";
 
 export default function Home(){
     
-    const {products, setProducts} = useContext(ProductContext);
-    const{ token,username } = useContext(UserContext);
-    const [menu,setMenu] = useState(false);
+    const {products, setProducts} = useContext(UserContext);
+    const{ token, username } = useContext(UserContext);
+    const [menu, setMenu] = useState(false);
 
 
     useEffect(() => getProducts(), [])
@@ -19,8 +19,8 @@ export default function Home(){
     async function getProducts(){
         try {
             const response = await axios.get(process.env.REACT_APP_LINK_BACKEND+"/home");
-            setproducts(response.data);        
-            console.log(response.data)
+            setProducts(response.data);        
+            console.log(response)
         } catch (error) {
           alert(`Erro ao buscar produtos: ${error.message}`);
             

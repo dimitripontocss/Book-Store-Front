@@ -1,13 +1,14 @@
 import styled from 'styled-components';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useContext } from 'react';
 
-import ProductContext from "../Context/productContext";
+
 import axios from 'axios';
+import UserContext from '../Context/userContext';
 
 export default function Product(){
    const { productID } = useParams();
-   const { products, setProducts } = useContext(ProductContext);
+   const { products, setProducts } = useContext(UserContext);
 
    const navigate = useNavigate();
 
