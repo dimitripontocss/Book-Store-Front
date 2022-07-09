@@ -57,6 +57,7 @@ export default function Checkout(){
                     </Completed>
                 :
                     <Content>
+                        <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>De uma última olhada no seu pedido antes de confirmar!</p>
                         <Products>
                             {products.map((value,index)=><Product value={value} key={index} />)}
                         </Products>
@@ -66,8 +67,8 @@ export default function Checkout(){
                                 <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>R$ {total}</p>
                             </div>
                             <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                                <div onClick={()=>{setLoading(true); checkout()}}><p style={{fontSize:18, color:"#BABD8D", fontWeight:700}}>Confirmar compra</p></div>
-                                <Link to="/"><p style={{fontSize:16, color:"#BABD8D", fontWeight:700}}>Cancelar compra</p></Link>
+                                <div onClick={()=>{setLoading(true); checkout()}}><p style={{fontSize:18, color:"#BABD8D", fontWeight:700}}>Tá tudo ok? Confirmar compra!</p></div>
+                                <Link to="/"><p style={{fontSize:16, color:"#BABD8D", fontWeight:700}}>Cancelar compra :(</p></Link>
                             </div>
                         </Confirmation>
                     </Content>
