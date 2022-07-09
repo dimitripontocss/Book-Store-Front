@@ -9,7 +9,7 @@ export default function Login(){
 
     const navigate = useNavigate();
 
-    const{ setToken,setUsername } = useContext(UserContext);
+    const { setToken,setUsername } = useContext(UserContext);
     const [email, setEmail] = useState("");
 	const [senha, setSenha] = useState("");
 
