@@ -9,14 +9,17 @@ import UserContext from "../Context/userContext";
 
 export default function Checkout(){
 
-    const{ token,username,selectedProducts,total } = useContext(UserContext);
+    const{ token,username,selectedProducts,total,setToken,setUsername } = useContext(UserContext);
 
-    console.log(selectedProducts);
     const navigate = useNavigate();
 
     const [menu,setMenu] = useState(false);
     const [loading, setLoading] = useState(false);
     const [done,setDone] = useState(false);
+    if(token === null || username === null || selectedProducts === []){
+        navigate("/");
+    }
+
 
     async function checkout(){
         await axios.post(process.env.REACT_APP_LINK_BACKEND+"/checkout",
@@ -41,7 +44,7 @@ export default function Checkout(){
                 <div onClick={()=>navigate(-1)}><ion-icon name="arrow-back-outline"></ion-icon></div>
                 <Link to="/"><h1>BookStore</h1></Link>
                 <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
-                <MenuUser menu={menu} setMenu={setMenu}/>
+                <MenuUser menu={menu} setMenu={setMenu} navigate={navigate} setToken={setToken} setUsername={setUsername}/>
             </Header>
             {
                 loading ? 
@@ -107,13 +110,13 @@ function User({username,token,setMenu,menu}){
     )
 }
 
-function MenuUser({menu,setMenu}){
+function MenuUser({menu,setMenu,navigate,setToken,setUsername}){
     return(
         <>
         {
             menu ?  <PopUp>
                         <Link to="/"><p>Voltar para a página inicial!</p></Link>
-                        <div onClick={()=>alert("Não foi implementado ainda!")}><p>Sair</p></div>
+                        <div onClick={()=>{localStorage.clear();setToken(null);setUsername(null);navigate("/")}}><p>Sair</p></div>
                         <div onClick={()=>{setMenu(false)}}><ion-icon name="caret-up-outline"></ion-icon></div>
                     </PopUp>
                     :
@@ -139,7 +142,7 @@ align-items: center;
 
 const CartProd = styled.div`
 display: flex;
-justify-content: space-between;
+justify-content: space-around;
 align-items: center;
 
 margin: 20px 20px;
@@ -149,6 +152,7 @@ border-bottom: 2px solid #BABD8D;
         max-height:100px;
         width: auto;
         height: auto;
+        margin-right: 20%;
     }
 `
 
@@ -215,7 +219,7 @@ align-items: center;
 
 const Products = styled.div`
 width: 50%;
-min-height: 40%;
+min-height: fit-content;
 max-height: 70%;
 
 margin-top: 30px;
