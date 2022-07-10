@@ -16,12 +16,13 @@ export default function App(){
 
     const [token,setToken] = useState(null);
     const [username,setUsername] = useState(null);
+    const [selectedProducts, setSelectedProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [total,setTotal] = useState(0);
 
     return(
 
-        <UserContext.Provider value={{token,setToken,username,setUsername,products,setProducts,total,setTotal}}>
+        <UserContext.Provider value={{token,setToken,username,setUsername,products,setProducts,selectedProducts,setSelectedProducts,total,setTotal}}>
             <GlobalStyle />
             <BrowserRouter>
                 <Routes>

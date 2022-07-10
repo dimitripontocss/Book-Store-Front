@@ -8,7 +8,7 @@ import UserContext from '../Context/userContext';
 
 export default function Product(){
    const { productID } = useParams();
-   const { products, setProducts } = useContext(UserContext);
+   const { products, setProducts, token } = useContext(UserContext);
 
    const navigate = useNavigate();
 
@@ -23,7 +23,11 @@ export default function Product(){
         console.log(id)
         try{
         const body = { productId: id }
-        axios.post(process.env.REACT_APP_LINK_BACKEND+"/cart", body);
+        axios.post(process.env.REACT_APP_LINK_BACKEND+"/cart", body,{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
          
             navigate("/carrinho");
         

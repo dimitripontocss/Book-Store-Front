@@ -6,7 +6,7 @@ import { useContext,useEffect,useState } from "react";
 import UserContext from "../Context/userContext";
 
 export default function Cart(){
-    const{ token,username,products,setProducts,total,setTotal } = useContext(UserContext);
+    const{ token,username,selectedProducts,setSelectedProducts,total,setTotal } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -15,12 +15,12 @@ export default function Cart(){
 
     async function deleteProduct(id){
         if(window.confirm("Vai mesmo tirar esse livro do carrinho?")){
-            await axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
+            const promise = axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            setRefresh(refresh+1);
+            setRefresh(refresh + 1);
         }
     }
 
@@ -30,8 +30,9 @@ export default function Cart(){
                 'Authorization': `Bearer ${token}`
             }
         })
-        promise.then((response) => {setProducts(response.data.products);setTotal(response.data.totalFixed)} );
-    }, [refresh])   
+        promise.then((response) => {setSelectedProducts(response.data.products);setTotal(response.data.totalFixed)} );
+        promise.catch(()=>{setSelectedProducts([])});
+    },[refresh])   
     return(
         <Container>
             <Header>
@@ -46,19 +47,19 @@ export default function Cart(){
                     }
                     <Products>
                         {
-                            products.length === 0 
+                            selectedProducts.length === 0 
                                 ?
                                 <div style={{textAlign:"center",fontSize:20, color:"#BABD8D", fontWeight:700,marginTop:100}}>
                                     <p>Seu carrinho está vazio!</p>
                                     <Link to="/"><p style={{color:"#BABD8D",marginTop:175}}>Voltar para a home!</p></Link>
                                 </div>
                                 :
-                                products.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
+                                selectedProducts.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
                         }
                     </Products>
                     <Checkout>
                         {
-                            products.length === 0 
+                            selectedProducts.length === 0 
                                 ?
                                 <></>
                                 :

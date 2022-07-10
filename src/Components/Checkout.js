@@ -9,8 +9,9 @@ import UserContext from "../Context/userContext";
 
 export default function Checkout(){
 
-    const{ token,username,products,total } = useContext(UserContext);
+    const{ token,username,selectedProducts,total } = useContext(UserContext);
 
+    console.log(selectedProducts);
     const navigate = useNavigate();
 
     const [menu,setMenu] = useState(false);
@@ -21,7 +22,7 @@ export default function Checkout(){
         await axios.post(process.env.REACT_APP_LINK_BACKEND+"/checkout",
         {
             username:username,
-            products:products,
+            products:selectedProducts,
             total:total
         }
         ,
@@ -59,7 +60,7 @@ export default function Checkout(){
                     <Content>
                         <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>De uma última olhada no seu pedido antes de confirmar!</p>
                         <Products>
-                            {products.map((value,index)=><Product value={value} key={index} />)}
+                            {selectedProducts.map((value,index)=><Product value={value} key={index} />)}
                         </Products>
                         <Confirmation> 
                             <div style={{display:"flex",justifyContent:"space-between"}}>
