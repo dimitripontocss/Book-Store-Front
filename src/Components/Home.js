@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 
@@ -9,10 +9,16 @@ import ProductContext from "../Context/productContext";
 
 export default function Home(){
     
-    const {products, setProducts} = useContext(UserContext);
+    const {products, setProducts, setToken, setUsername} = useContext(UserContext);
     const{ token, username } = useContext(UserContext);
     const [menu, setMenu] = useState(false);
 
+    const navigate = useNavigate();
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(user !== null){
+        setToken(user.token)
+        setUsername(user.name)
+    }
 
     useEffect(() => getProducts(), [])
 
@@ -33,7 +39,7 @@ export default function Home(){
                     <h1>BookStore</h1>
                     <Input placeholder="Pesquisar"></Input>    
                     <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
-                    <MenuUser menu={menu} setMenu={setMenu}/>                       
+                    <MenuUser menu={menu} setMenu={setMenu} setToken={setToken} setUsername={setUsername}/>                       
                 </Header>
                 <Container>
     
@@ -68,13 +74,13 @@ function User({username,token,setMenu,menu}){
     )
     }
 
-function MenuUser({menu,setMenu}){
+function MenuUser({menu,setMenu,setToken,setUsername}){
     return(
         <>
         {
             menu ?  <PopUp>
                         <Link to="/carrinho"><p>Ir para o Carrinho!</p></Link>
-                        <div onClick={()=>alert("Não foi implementado ainda!")}><p>Sair</p></div>
+                        <div onClick={()=>{localStorage.clear();setToken(null);setUsername(null);setMenu(false)}}><p>Sair</p></div>
                         <div onClick={()=>{setMenu(false)}}><ion-icon name="caret-up-outline" style={{color:"#ffffff"}}></ion-icon></div>
                     </PopUp>
                     :

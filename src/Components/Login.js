@@ -28,6 +28,8 @@ export default function Login(){
           {
             setToken(response.data.token);
             setUsername(response.data.name);
+            const user = JSON.stringify(response.data);
+            localStorage.setItem("user", user);
             navigate("/");
           })
           .catch((e)=>
