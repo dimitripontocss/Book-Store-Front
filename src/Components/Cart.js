@@ -15,7 +15,7 @@ export default function Cart(){
 
     async function deleteProduct(id){
         if(window.confirm("Vai mesmo tirar esse livro do carrinho?")){
-            const promise = axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
+            await axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
