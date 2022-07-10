@@ -6,9 +6,11 @@ import Home from './Home.js';
 import Login from './Login.js';
 import SignUp from './Signup.js';
 import Cart from './Cart.js';
+import Product from './Product.js'
 import Checkout from './Checkout.js';
 
 import UserContext from "../Context/userContext.js";
+import ProductContext from "../Context/productContext";
 
 export default function App(){
 
@@ -27,6 +29,7 @@ export default function App(){
                     <Route path="/login" element={<Login />} />
                     <Route path="/cadastro" element={<SignUp />} />
                     <Route path="/carrinho" element={<Cart />} />
+                    <Route path="/produto/:productID" element={<Product />} />
                     <Route path="/finalizar" element={<Checkout />} />
                 </Routes>
             </BrowserRouter>         

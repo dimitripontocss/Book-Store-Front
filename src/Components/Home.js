@@ -4,13 +4,14 @@ import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 
 import UserContext from "../Context/userContext";
+import ProductContext from "../Context/productContext";
 
 
 export default function Home(){
     
-    const [products, setproducts] = useState([]);
-    const{ token,username } = useContext(UserContext);
-    const [menu,setMenu] = useState(false);
+    const {products, setProducts} = useContext(UserContext);
+    const{ token, username } = useContext(UserContext);
+    const [menu, setMenu] = useState(false);
 
 
     useEffect(() => getProducts(), [])
@@ -18,8 +19,8 @@ export default function Home(){
     async function getProducts(){
         try {
             const response = await axios.get(process.env.REACT_APP_LINK_BACKEND+"/home");
-            setproducts(response.data);        
-            console.log(response.data)
+            setProducts(response.data);        
+            console.log(response)
         } catch (error) {
           alert(`Erro ao buscar produtos: ${error.message}`);
             
@@ -37,11 +38,13 @@ export default function Home(){
                 <Container>
     
                     {products.map(product => (
-                    <Box>
-                        <img src={product.imageUrl} />
-                        <p>{product.name}</p>
-                        <p>{product.price}</p>
-                    </Box>))}
+                    <Link to={`/produto/${product._id}`}>
+                        <Box>
+                            <img src={product.imageUrl} />
+                            <p>{product.name}</p>
+                            <p>Preço: <span style={{color:"green"}}>{product.price}</span></p>
+                        </Box>                    
+                    </Link>))}
                     
                 </Container>
             </Content>
@@ -52,7 +55,7 @@ function User({username,token,setMenu,menu}){
     return(
         <>
         {
-            !token ? <Link to="/login"><p style={{color:"#ffffff",fontSize:"12px",fontWeight:700,textShadow:"1px 1px 2px #7C6A0A", textAlign:"center"}}>Clique aqui e<br/> faça seu Login!</p></Link> 
+            !token ? <Link to="/login"><p style={{color:"#ffffff", fontSize:"20px",fontWeight:700,textShadow:"1px 1px 2px #7C6A0A", textAlign:"center"}}><ion-icon name="person-outline"></ion-icon></p></Link> 
             :
             <UserArea>
                 <p style={{color:"#ffffff",fontSize:"18px",fontWeight:700,marginRight:10}}>Olá {username}!</p>
@@ -106,17 +109,6 @@ text-align: center;
 
 `
 
-const UserArea = styled.div`
-display: flex;
-align-items: center;
-`
-
-const Content = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-`
-
 const Header = styled.div`
 
     position: fixed;
@@ -137,7 +129,20 @@ const Header = styled.div`
         text-shadow: 1px 1px 2px #7C6A0A;       
         
     }
+
 `
+
+const UserArea = styled.div`
+display: flex;
+align-items: center;
+`
+
+const Content = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
 
 const Input = styled.input`
     width: 40%;
@@ -157,12 +162,13 @@ const Container = styled.div`
     flex-wrap: wrap;
 
 img{
-    width: 120px;
+    width: 100px;
     height: 140px;
     margin-top: 14px;
     margin-bottom: 18px;
     border-radius: 5px;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
+    margin-bottom: -1px;
 }
 `
 const Box = styled.div`
@@ -171,9 +177,18 @@ const Box = styled.div`
     align-items: center;
     width: 160px;
     height: 270px;
-    background-color: #FA9500;
+    background-color: #BABD8D;
     border-radius: 5px;
-    margin-top: 18px;
+    margin-top: 78px;
+    margin-left: 20px;
+    font-family:'Roboto', sans-serif;
+    font-weight: 600;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
-    
+    color: black;
+
+    p{
+        color: 	#1C1C1C;
+        text-align: center;
+    }
+
 `
