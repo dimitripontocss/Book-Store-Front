@@ -1,12 +1,12 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 
 import UserContext from "../Context/userContext";
 
 export default function StyleHeader(){
     
-    const {products, setProducts, token, setToken, username, setUsername, menu, setMenu} = useContext(UserContext);
+    const {token, setToken, username, setUsername, menu, setMenu} = useContext(UserContext);
 
     return(
         <Header>
@@ -81,6 +81,7 @@ const PopUp = styled.div`
 position: fixed;
 left: 11%;
 top: 60px;
+z-index: 1;
 
 min-width: 120px;
 width: 11%;
