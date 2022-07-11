@@ -50,7 +50,7 @@ export default function Checkout(){
                     />
                 : done ?
                     <Completed style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                        <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Sua compra foi concluída, e um recibo será enviado para o seu email.</p>
+                        <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Sua compra foi concluída com sucesso.</p>
                         <Link to="/"><p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Voltar para a tela inicial.</p></Link>
                     </Completed>
                 :
