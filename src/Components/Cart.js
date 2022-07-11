@@ -44,7 +44,7 @@ export default function Cart(){
         promise.catch(()=>{setSelectedProducts([])});
     },[refresh])   
     useEffect(() => {
-        setTimeout(()=>{setRefresh(refresh + 1);setLoading(false)}, 1000);
+        setTimeout(()=>{setRefresh(refresh + 1);setLoading(false)}, 1700);
     },[])  
     
     return(
