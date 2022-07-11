@@ -49,12 +49,6 @@ export default function Cart(){
     
     return(
         <Container>
-            <Header>
-                <div onClick={()=>navigate(-1)}><ion-icon name="arrow-back-outline"></ion-icon></div>
-                <Link to="/"><h1>BookStore</h1></Link>
-                <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
-                <MenuUser menu={menu} setMenu={setMenu} navigate={navigate} setToken={setToken} setUsername={setUsername}/>
-            </Header>
             <Content>
                 {
                     loading ? <div style={{marginTop:300}}>
@@ -77,9 +71,11 @@ export default function Cart(){
 function ContentCart({username,selectedProducts,deleteProduct,total}){
     return(
         <>
-            {
-                username ? <p>Aqui está seu carrinho, {username}</p> : <p>Faça login para ver seu carrinho!</p>
-            }
+            <Intro>
+                {
+                    username ? <p>Aqui está seu carrinho, {username}</p> : <p>Faça login para ver seu carrinho!</p>
+                }
+            </Intro>
             <Products>
                 {
                     selectedProducts.length === 0 
@@ -100,12 +96,34 @@ function ContentCart({username,selectedProducts,deleteProduct,total}){
                         :
                         <>
                             <div style={{display:"flex",justifyContent:"space-between"}}>
-                                <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Seu Total:</p>
-                                <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>R$ {total}</p>
+                                <p style={{fontSize:20, color:"#EB6424", fontWeight:700}}>Seu Total:</p>
+                                <p style={{fontSize:20, color:"green", fontWeight:600}}>R$ {total}</p>
                             </div>
-                            <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                                <Link to="/finalizar"><p style={{fontSize:18, color:"#BABD8D", fontWeight:700}}>Fazer Checkout</p></Link>
-                                <Link to="/"><p style={{fontSize:16, color:"#BABD8D", fontWeight:700}}>Continuar comprando</p></Link>
+                            <div style={{display:"flex", flexDirection: "column", alignItems:"center"}}>
+                                <Link to="/finalizar"><p style={{
+                                    fontSize:16, 
+                                    color:"#FFFFFF", 
+                                    fontWeight:700, 
+                                    width: "auto", 
+                                    backgroundColor: "#EB6424", 
+                                    padding: "6px",
+                                    borderRadius: "5px",
+                                    opacity: "0.6",
+                                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"                                    
+                                    
+                                }}>Fazer Checkout</p></Link>
+                                
+                                <Link to="/"><p style={{
+                                    fontSize:16, 
+                                    color:"#FFFFFF", 
+                                    fontWeight:700,
+                                    backgroundColor: "#FA9500", 
+                                    padding: "6px",
+                                    borderRadius: "5px",
+                                    marginLeft: "10px",
+                                    opacity: "0.6",
+                                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"
+                                }}>Continuar comprando</p></Link>
                             </div>
                         </>
                 }
@@ -114,39 +132,6 @@ function ContentCart({username,selectedProducts,deleteProduct,total}){
     )
 }
 
-
-function User({username,token,setMenu,menu}){
-    return(
-        <>
-        {
-            !token ? <Link to="/login"><p style={{color:"#ffffff",fontSize:"12px",fontWeight:700,textShadow:"1px 1px 2px #7C6A0A", textAlign:"center"}}>Clique aqui e<br/> faça seu Login!</p></Link> 
-            :
-            <UserArea>
-                <p style={{color:"#ffffff",fontSize:"18px",fontWeight:700,marginRight:10}}>Olá {username}</p>
-                {
-                    menu ? <></> : <div onClick={()=> {setMenu(true)}}><ion-icon name="caret-down-outline"></ion-icon></div>
-                }
-            </UserArea>
-        }
-        </>
-    )
-    }
-
-function MenuUser({menu,setMenu,navigate,setToken,setUsername}){
-    return(
-        <>
-        {
-            menu ?  <PopUp>
-                        <Link to="/"><p>Voltar para a página inicial!</p></Link>
-                        <div onClick={()=>{localStorage.clear();setToken(null);setUsername(null);navigate("/")}}><p>Sair</p></div>
-                        <div onClick={()=>{setMenu(false)}}><ion-icon name="caret-up-outline"></ion-icon></div>
-                    </PopUp>
-                    :
-                    <></>
-        }
-        </>
-    )
-}
 
 function Product({value,deleteProduct}){
     return(
@@ -163,11 +148,18 @@ function Product({value,deleteProduct}){
     )
 }
 
+const Intro = styled.div`
+    color: #EB6424;
+    font-weight: 600;
+    font-size: 24px;
+`
+
 const Checkout = styled.div`
 display: flex;
 flex-direction: column;
+text-align: center;
 
-width: 45%;
+width: 30%;
 `
 
 const CartProd = styled.div`
@@ -186,31 +178,6 @@ border-bottom: 2px solid #BABD8D;
     }
 `
 
-const PopUp = styled.div`
-position: fixed;
-right: 3%;
-top: 60px;
-
-min-width: 140px;
-width: 11%;
-height: fit-content;
-
-border-radius: 7px;
-background-color: #BABD8D;
-
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-text-align: center;
-
-    p{
-        font-size: 14px;
-        color: #ffffff;
-    }
-
-`
-
 const Container = styled.div`
 width: 100%;
 height: 100vh;
@@ -226,40 +193,6 @@ h1{
 }
 `
 
-const Header = styled.div`
-    width: 100%;
-    height: 60px;
-
-    position: fixed;
-    top: 0;
-
-    background-color: #BABD8D;
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding-left: 5%;
-    padding-right: 5%;
-
-    box-shadow: 1px 3px 10px 1px rgba(0, 0, 0, 0.2);
-
-    h1{
-        font-family:'Josefin Sans', sans-serif;
-        font-size: 24px;
-        color: #FFFFFF;
-        text-shadow: 1px 1px 2px #7C6A0A;  
-        padding-left: 30%;
-    }
-    ion-icon{
-        font-size: 20px;
-        color: #FFFFFF;
-    }
-`
-const UserArea = styled.div`
-display: flex;
-align-items: center;
-`
 const Content = styled.div`
 width: 80%;
 height: 80%;
@@ -274,9 +207,9 @@ align-items: center;
     }
 `
 const Products = styled.div`
-width: 50%;
-min-height: fit-content;
-max-height: 70%;
+width: auto;
+height: auto;
+padding: 10px;
 
 margin-top: 30px;
 border: 3px solid #BABD8D;
