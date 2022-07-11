@@ -2,117 +2,136 @@ import styled from "styled-components";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext,useEffect,useState } from "react";
+import { ThreeDots } from  'react-loader-spinner'
 
 import UserContext from "../Context/userContext";
 
 export default function Cart(){
-    const{ token,username } = useContext(UserContext);
+    const{ token,username,setToken,setUsername,selectedProducts,setSelectedProducts,total,setTotal } = useContext(UserContext);
 
     const navigate = useNavigate();
-
+    const user = JSON.parse(localStorage.getItem("user"));
+    if(user !== null){
+        setToken(user.token)
+        setUsername(user.name)
+    }else{
+        navigate("/");
+    }
+    
     const [menu,setMenu] = useState(false);
-    const [products, setProducts] = useState([]);
-    const [total,setTotal] = useState(0);
     const [refresh,setRefresh] = useState(0);
+    const [loading, setLoading] = useState(true);
+    console.log(selectedProducts);
 
-    function deleteProduct(id){
-        if(window.confirm("Vai tirar esse livro do carrinho?")){
-            const promise = axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
+    async function deleteProduct(id){
+        if(window.confirm("Vai mesmo tirar esse livro do carrinho?")){
+            await axios.delete(process.env.REACT_APP_LINK_BACKEND+`/cart/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
-            setRefresh(refresh+1);
+            setRefresh(refresh + 1);
         }
     }
-
+    
     useEffect(() => {
         const promise = axios.get(process.env.REACT_APP_LINK_BACKEND+"/cart", {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         })
-        promise.then((response) => {setProducts(response.data.products);setTotal(response.data.totalFixed)} );
-    }, [refresh])   
+        promise.then((response) => {setSelectedProducts(response.data.products);setTotal(response.data.totalFixed)} );
+        promise.catch(()=>{setSelectedProducts([])});
+    },[refresh])   
+    useEffect(() => {
+        setTimeout(()=>{setRefresh(refresh + 1);setLoading(false)}, 1000);
+    },[])  
+    
     return(
         <Container>
-            <Header>
-                <div onClick={()=>navigate(-1)}><ion-icon name="arrow-back-outline"></ion-icon></div>
-                <Link to="/"><h1>BookStore</h1></Link>
-                <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
-                <MenuUser menu={menu} setMenu={setMenu}/>
-            </Header>
             <Content>
-                    {
-                        username ? <p>Aqui está seu carrinho, {username}</p> : <p>Faça login para ver seu carrinho!</p>
-                    }
-                    <Products>
-                        {
-                            products.length === 0 
-                                ?
-                                <div style={{textAlign:"center",fontSize:20, color:"#7c6a0a", fontWeight:700,marginTop:100}}>
-                                    <p>Seu carrinho está vazio!</p>
-                                    <Link to="/"><p style={{color:"#7c6a0a",marginTop:175}}>Voltar para a home!</p></Link>
-                                </div>
-                                :
-                                products.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
-                        }
-                    </Products>
-                    <Checkout>
-                        {
-                            products.length === 0 
-                                ?
-                                <></>
-                                :
-                                <>
-                                    <div style={{display:"flex",justifyContent:"space-between"}}>
-                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>Seu Total:</p>
-                                        <p style={{fontSize:20, color:"#7c6a0a", fontWeight:700}}>R$ {total}</p>
-                                    </div>
-                                    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
-                                        <Link to="/finalizar"><p style={{fontSize:18, color:"#7c6a0a", fontWeight:700}}>Fazer Checkout</p></Link>
-                                        <Link to="/"><p style={{fontSize:16, color:"#7c6a0a", fontWeight:700}}>Continuar comprando</p></Link>
-                                    </div>
-                                </>
-                        }
-                    </Checkout>
+                {
+                    loading ? <div style={{marginTop:300}}>
+                                <ThreeDots
+                                height="50"
+                                width="150"
+                                color='#BABD8D'
+                                ariaLabel='loading'
+                                /> 
+                            </div>
+                    :
+                    <ContentCart username={username} selectedProducts={selectedProducts} deleteProduct={deleteProduct} total={total}/>
+                }
+                    
             </Content>
         </Container>
     )
 }
 
-function User({username,token,setMenu,menu}){
+function ContentCart({username,selectedProducts,deleteProduct,total}){
     return(
         <>
-        {
-            !token ? <Link to="/login"><p style={{color:"#ffffff",fontSize:"12px",fontWeight:700,textShadow:"1px 1px 2px #7C6A0A", textAlign:"center"}}>Clique aqui e<br/> faça seu Login!</p></Link> 
-            :
-            <UserArea>
-                <p style={{color:"#ffffff",fontSize:"18px",fontWeight:700,marginRight:10}}>Olá {username}</p>
+            <Intro>
                 {
-                    menu ? <></> : <div onClick={()=> {setMenu(true)}}><ion-icon name="caret-down-outline"></ion-icon></div>
+                    username ? <p>Aqui está seu carrinho, {username}</p> : <p>Faça login para ver seu carrinho!</p>
                 }
-            </UserArea>
-        }
-        </>
-    )
-    }
-
-function MenuUser({menu,setMenu}){
-    return(
-        <>
-        {
-            menu ?  <PopUp>
-                        <Link to="/"><p>Voltar para a página inicial!</p></Link>
-                        <div onClick={()=>alert("Não foi implementado ainda!")}><p>Sair</p></div>
-                        <div onClick={()=>{setMenu(false)}}><ion-icon name="caret-up-outline"></ion-icon></div>
-                    </PopUp>
-                    :
-                    <></>
-        }
+            </Intro>
+            <Products>
+                {
+                    selectedProducts.length === 0 
+                        ?
+                        <div style={{textAlign:"center",fontSize:20, color:"#BABD8D", fontWeight:700,marginTop:100}}>
+                            <p>Seu carrinho está vazio!</p>
+                            <Link to="/"><p style={{color:"#BABD8D",marginTop:175}}>Voltar para a home!</p></Link>
+                        </div>
+                        :
+                        selectedProducts.map((value,index)=><Product value={value} key={index} deleteProduct={deleteProduct}/>)
+                }
+            </Products>
+            <Checkout>
+                {
+                    selectedProducts.length === 0 
+                        ?
+                        <></>
+                        :
+                        <>
+                            <div style={{display:"flex",justifyContent:"space-between"}}>
+                                <p style={{fontSize:20, color:"#EB6424", fontWeight:700}}>Seu Total:</p>
+                                <p style={{fontSize:20, color:"green", fontWeight:600}}>R$ {total}</p>
+                            </div>
+                            <div style={{display:"flex", flexDirection: "column", alignItems:"center"}}>
+                                <Link to="/finalizar"><p style={{
+                                    fontSize:16, 
+                                    color:"#FFFFFF", 
+                                    fontWeight:700, 
+                                    width: "auto", 
+                                    backgroundColor: "#EB6424", 
+                                    padding: "6px",
+                                    borderRadius: "5px",
+                                    opacity: "0.6",
+                                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"                                    
+                                    
+                                }}>Fazer Checkout</p></Link>
+                                
+                                <Link to="/"><p style={{
+                                    fontSize:16, 
+                                    color:"#FFFFFF", 
+                                    fontWeight:700,
+                                    backgroundColor: "#FA9500", 
+                                    padding: "6px",
+                                    borderRadius: "5px",
+                                    marginLeft: "10px",
+                                    opacity: "0.6",
+                                    boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)"
+                                }}>Continuar comprando</p></Link>
+                            </div>
+                        </>
+                }
+            </Checkout>
         </>
     )
 }
+
 
 function Product({value,deleteProduct}){
     return(
@@ -129,11 +148,18 @@ function Product({value,deleteProduct}){
     )
 }
 
+const Intro = styled.div`
+    color: #EB6424;
+    font-weight: 600;
+    font-size: 24px;
+`
+
 const Checkout = styled.div`
 display: flex;
 flex-direction: column;
+text-align: center;
 
-width: 45%;
+width: 30%;
 `
 
 const CartProd = styled.div`
@@ -142,38 +168,14 @@ justify-content: space-between;
 align-items: center;
 
 margin: 20px 20px;
-border-bottom: 2px solid #7c6a0a;
+border-bottom: 2px solid #BABD8D;
     img{
         max-width:80px;
         max-height:100px;
         width: auto;
         height: auto;
+        margin-right: 10%;
     }
-`
-
-const PopUp = styled.div`
-position: fixed;
-right: 3%;
-top: 60px;
-
-min-width: 140px;
-width: 11%;
-height: fit-content;
-
-border-radius: 7px;
-background-color: #BABD8D;
-
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-text-align: center;
-
-    p{
-        font-size: 14px;
-        color: #ffffff;
-    }
-
 `
 
 const Container = styled.div`
@@ -191,41 +193,6 @@ h1{
 }
 `
 
-const Header = styled.div`
-    width: 100%;
-    height: 60px;
-
-    position: fixed;
-    top: 0;
-
-    background-color: #BABD8D;
-    
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    padding-left: 5%;
-    padding-right: 5%;
-
-    box-shadow: 1px 3px 10px 1px rgba(0, 0, 0, 0.2);
-
-    h1{
-        font-family:'Josefin Sans', sans-serif;
-        font-size: 24px;
-        color: #FFFFFF;
-        text-shadow: 1px 1px 2px #7C6A0A;  
-        padding-left: 30%;
-    }
-    ion-icon{
-        font-size: 20px;
-        color: #FFFFFF;
-    }
-`
-const UserArea = styled.div`
-display: flex;
-align-items: center;
-`
-
 const Content = styled.div`
 width: 80%;
 height: 80%;
@@ -235,17 +202,17 @@ flex-direction: column;
 align-items: center;
     >p{
         font-size: 20px;
-        color: #7c6a0a;
+        color: #BABD8D;
         font-weight: 700;
     }
 `
 const Products = styled.div`
-width: 50%;
-min-height: fit-content;
-max-height: 70%;
+width: auto;
+height: auto;
+padding: 10px;
 
 margin-top: 30px;
-border: 3px solid #7c6a0a;
+border: 3px solid #BABD8D;
 border-radius: 8px;
 
 overflow-y: scroll;
