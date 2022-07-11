@@ -8,6 +8,7 @@ import SignUp from './Signup.js';
 import Cart from './Cart.js';
 import Product from './Product.js'
 import Checkout from './Checkout.js';
+import Header from './Header.js';
 
 import UserContext from "../Context/userContext.js";
 import ProductContext from "../Context/productContext";
@@ -19,12 +20,14 @@ export default function App(){
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [products, setProducts] = useState([]);
     const [total,setTotal] = useState(0);
+    const [menu, setMenu] = useState(false);
 
     return(
 
-        <UserContext.Provider value={{token,setToken,username,setUsername,products,setProducts,selectedProducts,setSelectedProducts,total,setTotal}}>
+        <UserContext.Provider value={{token,setToken,username,setUsername,products,setProducts,selectedProducts,setSelectedProducts,total,setTotal, menu, setMenu}}>
             <GlobalStyle />
             <BrowserRouter>
+                <Header />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
