@@ -34,8 +34,7 @@ export default function Home(){
 
     return(
             <Content>
-                <Container>
-    
+                <Container>    
                     {products.map(product => (
                     <Link to={`/produto/${product._id}`}>
                         <Box>
@@ -49,6 +48,7 @@ export default function Home(){
             </Content>
     )
 }
+
 
 const Content = styled.div`
     display: flex;
@@ -89,8 +89,10 @@ const Box = styled.div`
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     color: black;
     position:relative;
-    :hover{top:-2px;box-shadow:0 2px 2px #666}
-    z-index: -1;
+    top:0;
+    transition: all .2s ease-in-out;
+    :hover {top:-4px;box-shadow:0 4px 6px #999};
+    
 
     p{
         color: 	#1C1C1C;
