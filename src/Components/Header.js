@@ -1,19 +1,21 @@
 import styled from "styled-components";
-import { Link, useNavigate } from "react-router-dom";
-import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
 
 import UserContext from "../Context/userContext";
 
 export default function StyleHeader(){
     
-    const {products, setProducts, token, setToken, username, setUsername, menu, setMenu} = useContext(UserContext);
+    const {token, setToken, username, setUsername, menu, setMenu} = useContext(UserContext);
 
     return(
-        <Header>
-            <User username={username} token={token} setMenu={setMenu} menu={menu}/>              
-            <Link to="/"><h1>BookStore</h1></Link>    
-            <MenuUser menu={menu} setMenu={setMenu} setToken={setToken} setUsername={setUsername}/>                       
-        </Header>
+        <>
+            <Header>
+                <User username={username} token={token} setMenu={setMenu} menu={menu}/>
+                <Link to="/"><h1>BookStore</h1></Link>    
+                <MenuUser menu={menu} setMenu={setMenu} setToken={setToken} setUsername={setUsername}/>                       
+            </Header>
+        </>
     )
 
     function User({username,token,setMenu,menu}){
@@ -54,8 +56,8 @@ export default function StyleHeader(){
 
 }
 
-const Header = styled.div`
 
+const Header = styled.div`
     position: fixed;
     top: 0;
     left: 0;
@@ -66,6 +68,7 @@ const Header = styled.div`
     justify-content: space-around;
     align-items: center;
     box-shadow: 1px 3px 10px 1px rgba(0, 0, 0, 0.2);
+    z-index: 1;
 
     h1{
         font-family:'Josefin Sans', sans-serif;
@@ -81,6 +84,7 @@ const PopUp = styled.div`
 position: fixed;
 left: 11%;
 top: 60px;
+z-index: 1;
 
 min-width: 120px;
 width: 11%;

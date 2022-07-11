@@ -143,6 +143,7 @@ border-bottom: 2px solid #BABD8D;
 const Products = styled.div`
 width: auto;
 height: auto;
+padding-left:20px;
 
 
 margin-top: 30px;
@@ -168,7 +169,7 @@ const Confirmation = styled.div`
 display: flex;
 flex-direction: column;
 
-width: 30%;
+width: 40%;
 `
 
 const Completed = styled.div`
