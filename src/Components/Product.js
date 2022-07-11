@@ -55,6 +55,7 @@ const Poster = styled.div`
     align-items: center;
     width: 100%;
     height: 100vh;
+    margin-top: 60px;
     font-family:'Roboto', sans-serif;
     font-weight: 700; 
     text-align: justify;

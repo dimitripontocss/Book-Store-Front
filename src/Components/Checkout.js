@@ -51,7 +51,7 @@ export default function Checkout(){
                 : done ?
                     <Completed style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
                         <p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Sua compra foi concluída, e um recibo será enviado para o seu email.</p>
-                        <Link to="/"><p style={{fontSize:20, color:"#BABD8D", fontWeight:700}}>Voltar para a tela inicial.</p></Link>
+                        <Link to="/"><p style={{fontSize:20, color:"#BABD8D", fontWeight:700, backgroundColor: "#FA9500", color: "#FFFFFF", borderRadius: "5px", padding: "10px"}}>Voltar para a tela inicial.</p></Link>
                     </Completed>
                 :
                     <Content>
@@ -143,6 +143,7 @@ border-bottom: 2px solid #BABD8D;
 const Products = styled.div`
 width: auto;
 height: auto;
+padding-left:20px;
 
 
 margin-top: 30px;
@@ -168,7 +169,7 @@ const Confirmation = styled.div`
 display: flex;
 flex-direction: column;
 
-width: 30%;
+width: 40%;
 `
 
 const Completed = styled.div`

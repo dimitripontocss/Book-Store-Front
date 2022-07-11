@@ -62,6 +62,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    margin-top: 60px;
 
 img{
     width: 100px;
@@ -81,12 +82,15 @@ const Box = styled.div`
     height: 270px;
     background-color: #BABD8D;
     border-radius: 5px;
-    margin-top: 78px;
+    margin-top: 60px;
     margin-left: 20px;
     font-family:'Roboto', sans-serif;
     font-weight: 600;
     box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
     color: black;
+    position:relative;
+    :hover{top:-2px;box-shadow:0 2px 2px #666}
+    z-index: -1;
 
     p{
         color: 	#1C1C1C;
